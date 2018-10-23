@@ -1,41 +1,64 @@
-//Draft 1
-/*console.log('Welcome to the calculator!');
- console.log('I have taken over'); 
- const readline = require('readline-sync');
- console.log('Please enter input 1:');
- const response1 = readline.prompt();
- console.log('Please enter input 2:');
- const response2 = readline.prompt();
- console.log(response1*response2); */
-
 const readline = require('readline-sync');
 
-console.log('\nWelcome to the calculator!');
-console.log('==============================');
+function welcomeMsg() {
+    console.log('\nWelcome to the calculator!');
+    console.log('==============================');
+}
 
-console.log('\nPlease enter the operator:');
-const operator = readline.prompt();
+function getStringPrompt(prompt) {
+    console.log('\n' + prompt);
+    return readline.prompt();
+}
 
-console.log('\nPlease enter the first number:');
-const firstArgument = readline.prompt();
-const firstNumber = +firstArgument;
+function getNumberPrompt(prompt) {
+    let response;
+    do {
+        response = +getStringPrompt(prompt);
+    } while (isNaN(response));
+    return response;
+}
 
-console.log('\nPlease enter the second number:');
-const secondArgument = readline.prompt();
-const secondNumber = +secondArgument;
+function getOperator() {
+    return getStringPrompt('Please enter the operator:');
+}
 
-let answer = 0;
-if (operator === '+') {
-    answer = firstNumber + secondNumber;
-} else if (operator === '-') {
-    answer = firstNumber - secondNumber;
-} else if (operator === '*') {
-    answer = firstNumber * secondNumber;
-} else if (operator === '/') {
-    answer = firstNumber / secondNumber;
-} else if (operator === '%') {
-    answer = firstNumber / secondNumber;
-} else if (operator === '**') {
-    answer = firstNumber / secondNumber;
-} 
-console.log('\nThe answer is ' + answer);
+function getNumArray(operator) {
+    const iterations = getNumberPrompt('How many numbers do you want to ' + operator + '?');
+    let numbers = new Array(iterations);
+    for (let ix = 0; ix < iterations; ix++) {
+        numbers[ix] = getNumberPrompt('Please enter number ' + (ix + 1) + ':');
+    }
+    return numbers;
+}
+
+function calcAns(operator, numbers) {
+    let answer = numbers[0];
+    for (let value = 1; value < numbers.length; value++) {
+        if (operator === '+') {
+            answer += numbers[value];
+        } else if (operator === '-') {
+            answer -= numbers[value];
+        } else if (operator === '*') {
+            answer *= numbers[value];
+        } else if (operator === '/') {
+            answer /= numbers[value];
+        }else if (operator === '%') {
+            answer %= numbers[value];
+        }else if (operator === '**') {
+            answer **= numbers[value];
+        }
+    }
+    return answer;
+}
+
+function performCalc() {
+    const operator = getOperator();
+    const numbers = getNumArray(operator);
+    const answer = calcAns(operator, numbers);
+    console.log('\nThe answer is ' + answer);
+}
+
+welcomeMsg();
+while (true) {
+    performCalc();
+}
